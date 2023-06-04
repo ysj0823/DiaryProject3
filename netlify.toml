@@ -1,0 +1,39 @@
+[[redirects]]
+  from = "/Diary"
+  to = "/Diary.html"
+  status = 200
+
+[[redirects]]
+  from = "/Signup"
+  to = "/Signup.html"
+  status = 200
+
+[[redirects]]
+  from = "/Login"
+  to = "/Login.html"
+  status = 200
+
+[[redirects]]
+  from = "/Calendar"
+  to = "/Calendar.html"
+  status = 200
+
+[[redirects]]
+  from = "/MyPage"
+  to = "/MyPage.html"
+  status = 200
+
+[[redirects]]
+  from = "/ChangeNickname"
+  to = "/ChangeNickname.html"
+  status = 200
+
+[[redirects]]
+  from = "/ChangePassword"
+  to = "/ChangePassword.html"
+  status = 200
+
+  [[redirects]]
+  from = "/monthly_statistic"
+  to = "/monthly_statistic.html"
+  status = 200
