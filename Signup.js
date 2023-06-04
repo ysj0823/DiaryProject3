@@ -129,7 +129,7 @@ function signup() {
                 alert("회원가입이 완료되었습니다.");
                 localStorage.setItem('accountDiaryList', JSON.stringify(accountDiaryList));
                 localStorage.setItem('accountList',JSON.stringify(accountList));
-                location.href="./Login.html";
+                location.href="./index.html";
             }
     } else {
       alert("아이디: 영문자로 시작하는 영문자 또는 숫자 6-20자리\n패스워드:문자, 숫자조합 8-16자리");

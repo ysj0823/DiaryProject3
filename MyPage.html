@@ -86,7 +86,7 @@ function Out(loggedInUserInfo){
     localStorage.setItem('accountDiaryList', JSON.stringify(accountDiaryList));
 
     alert("회원 탈퇴가 완료되었습니다.");
-    location.href = './Login.html';
+    location.href = './index.html';
   }
 }
 
@@ -113,7 +113,7 @@ outButton.addEventListener("click", function() {
 });
 const logoutButton=document.getElementById("logout");
 logoutButton.addEventListener("click", function() {
-  location.href = "./Login.html";
+  location.href = "./index.html";
 });
   </script>
 </body>
