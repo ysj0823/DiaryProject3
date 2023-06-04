@@ -28,7 +28,7 @@ document.getElementById("statistic").addEventListener("click", function () {
 
 //로그아웃 버튼
 document.getElementById("logout").addEventListener("click", function () {
-  location.href = "./index.html";
+  location.href = "./Login.html";
 });
 
 //마이페이지 버튼
@@ -74,19 +74,13 @@ function calendarMaker(target, date) {
     cnt++;
   }
 
-   //날짜 채우기
-   for (i = 1; i <= thisLastDay.getDate(); i++) {
+  //날짜 채우기
+  for (i = 1; i <= thisLastDay.getDate(); i++) {
     if (cnt % 7 == 0) {
       tag += "<tr>";
     }
 
-    if (i === 1) {
-      // 첫째날을 선택 상태로 설정
-      tag += "<td class='select_day'>" + i + "</td>";
-    } else {
-      tag += "<td>" + i + "</td>";
-    }
-
+    tag += "<td>" + i + "</td>";
     cnt++;
     if (cnt % 7 == 0) {
       tag += "</tr>";
@@ -134,10 +128,7 @@ function calendarMaker(target, date) {
 
     return dayOfWeek;
   }
-// 페이지 로드 시 첫째날 선택
-$(".custom_calendar_table").on("click", "td", function () {
-  // ...
-}).filter(".select_day").trigger("click");
+
   function calMoveEvtFn() {
     //전달 클릭
     $(".custom_calendar_table").on("click", ".prev", function () {
@@ -203,26 +194,20 @@ $(".custom_calendar_table").on("click", "td", function () {
 
       //삭제버튼
       deleteButton.addEventListener("click", function() {
-        let confirmCount = 0; // 확인 대화상자 표시 횟수를 세는 변수 추가
-        
         loggedInUserDiary.forEach((e, index) => {
           if (e[0] === loggedInUserInfo[1] && e[1] == y && e[2] == mm && e[3] == nn) {
-            if (confirmCount === 0) { // 첫 번째 확인 대화상자일 때만 실행
-              const confirmed = confirm("일기를 삭제하시겠습니까?");
-              confirmCount++;
-              
-              if (confirmed) {
-                loggedInUserDiary.splice(index, 1); 
-                alert("일기가 삭제되었습니다.");
-                localStorage.setItem("accountDiaryList", JSON.stringify(loggedInUserDiary));
-                location.reload();
-              }
+            const confirmed = confirm("일기를 삭제하시겠습니까?");
+            
+            if (confirmed) {
+              loggedInUserDiary.splice(index, 1); 
+              alert("일기가 삭제되었습니다.");
+              localStorage.setItem("accountDiaryList", JSON.stringify(loggedInUserDiary));
+              location.reload();
             }
             return;
           }
         });
       });
-      
 
       if (userDiary && Array.isArray(userDiary)) {
         let diaryFound = false;
