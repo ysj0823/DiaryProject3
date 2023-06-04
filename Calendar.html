@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>달력 만들기</title>
+    <link rel="stylesheet" type="text/css" href="./Calendar.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <ul class="nav-container">
+            <li class="nav-item" id="statistic">월간통계</li>
+            <li class="nav-item" id="mypage">mypage</li>
+            <li class="nav-item" id="logout">logout</li>
+        </ul>
+    </nav>
+    <div id="nickname">님의 감정록</div>
+    <div id="calendarForm"></div>
+    <div class="box-container">
+        <div class="today-box">
+            '<a id="month">월</a><a id="date"> 일 </a><a id="day">요일</a>'
+            <p id="content"></p>
+            <div id="buttonContainer">
+                <button id="editbutton">작성</button>
+                <button id="deletebutton">삭제</button>
+            </div>
+        </div>
+        <div class="past-box"></div>
+    </div>
+
+    <script src="./Calendar.js"></script>
+
+</body>
+
+</html>

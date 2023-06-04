@@ -1,0 +1,159 @@
+<!-- ChangeNickname.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>닉네임 변경</title>
+  <style>
+    /* 폰트 */
+@font-face {
+  font-family: 'GangwonEdu_OTFBoldA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 폰트 적용 */
+body {
+  font-family: 'GangwonEdu_OTFBoldA', sans-serif;
+}
+
+/* 양 옆 여백 */
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+/* 상단바 (닉네임 변경) */
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  height: 60px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+  padding: 0 20px;
+  margin-bottom: 40px;
+}
+
+/* 상단바 글씨 */
+.header__title {
+  font-size: 20px;
+  margin: 0 auto;
+}
+
+/* 뒤로가기 버튼 */
+.header_button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* 닉네임 변경 폼 */
+.form {
+  border: 1px solid #ccc;
+  padding: 30px;
+  padding-top: 20px;
+  width: 440px;
+  border-radius: 5px;
+}
+
+/* 닉네임 + 입력창이 같이 움직이게 (사이에 공간 두려고) */
+.form__group {
+  margin-bottom: 40px;
+}
+
+/* 닉네임, 입력창 라벨 */
+.form__label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* 입력창 */
+.form__input {
+  font-family: 'GangwonEdu_OTFBoldA', sans-serif;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* 버튼 */
+.button {
+  font-family: 'GangwonEdu_OTFBoldA', sans-serif;
+  background-color: rgb(255, 214, 179);
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 20px 40px;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <button class="header_button" id="Hbutton">
+        <img src="https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-left-01-512.png" alt="뒤로 가기" width="20" height="20">
+      </button>
+      <h1 class="header__title">닉네임 변경</h1>
+    </header>
+    <form class="form">
+      <div class="form__group">
+        <label for="current-nickname" class="form__label">현재 닉네임</label>
+         <input type="text" id="current-nickname" name="current-nickname" class="form__input" placeholder="현재 닉네임을 입력하세요" >
+      </div>
+      <div class="form__group">
+        <label for="new-nickname" class="form__label">새로운 닉네임</label>
+        <input type="text" id="new-nickname" name="new-nickname" class="form__input" placeholder="새로운 닉네임을 입력하세요">
+      </div>
+      <button type="submit" class="button" id="Cbutton">변경</button>
+    </form>
+  </div>
+  <script>
+  function Changename(loggedInUserInfo){
+    var Nickname = loggedInUserInfo[0];
+    var writenickname = document.getElementById('current-nickname').value;
+    var newNickname = document.getElementById('new-nickname').value;
+    var accountList = JSON.parse(localStorage.getItem('accountList'));
+    
+    if (Nickname === writenickname ) {
+      loggedInUserInfo[0] = newNickname;
+      alert("닉네임 변경완료");
+      
+     
+      for (var i = 0; i < accountList.length; i++) {
+      if (accountList[i][1] === loggedInUserInfo[1]) {
+      accountList[i][0] = newNickname;
+      break;
+        }
+      }
+      localStorage.setItem('accountList', JSON.stringify(accountList));
+      localStorage.setItem('loggedInUserInfo', JSON.stringify(loggedInUserInfo));
+ 
+    } else{
+        alert("현재 닉네임이 다릅니다.");
+    }
+    
+  }
+    
+    const CButton = document.getElementById("Cbutton");
+    CButton.addEventListener("click", function() {
+      var loggedInUserInfo = JSON.parse(localStorage.getItem('loggedInUserInfo'));
+      Changename(loggedInUserInfo);
+    });
+    //뒤로가기버튼    
+    const backButton=document.getElementById("Hbutton");
+    backButton.addEventListener("click", function() {
+    location.href = "./mypage.html";
+    });
+  </script>
+</body>
+
+</html>

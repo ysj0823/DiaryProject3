@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감정록 회원가입</title>
+    <link rel="stylesheet" type="text/css" href="./Signup.css">
+
+</head>
+<body>
+    <h1>감정록 회원가입</h1>
+    <div class="box">
+        <input placeholder="닉네임" type="text" id="username"><br>
+        <input placeholder="아이디" type="text" id="id"><br>
+        <div class="id-success-message hide">사용 가능한 아이디</div>
+        <div class="id-failure-message hide">아이디 조건: 영문자로 시작하는 영문자 또는 숫자 6-20</div>
+        <input placeholder="패스워드" type="password" id="pw"><br>
+        <input placeholder="패스워드 확인" type="password" id="re-pw"><br>
+        <div class="mismatch-message hide">패스워드가 일치하지 않습니다</div>
+        <div class="match-message hide">패스워드가 일치합니다</div>
+        <div class="pw-condition hide">비밀번호 조건: 8-16 문자, 숫자 조합</div>
+        <div class="Button-all">
+            <button class="main-button" onclick="back()">뒤로가기</button>
+        </div>
+        <div class="Button-all">
+            <button class="main-button" onkeyup id="signUp">회원가입</button>
+        </div>
+    </div>
+    <script src="./Signup.js"></script>
+</body>
+</html>

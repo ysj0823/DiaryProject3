@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>마이페이지</title>
+   <link rel="stylesheet" type="text/css" href="./MyPage.css">
+
+</head>
+<body>
+<div class="container">
+   <header class="header">
+      <button class="header_button" id="back">
+         <img src="https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-left-01-512.png" alt="뒤로 가기" width="20" height="20">
+      </button>
+      <h1 class="header__title">마이페이지</h1>
+   </header>
+   <main class="main">
+      <div class="info-box">
+         <p id="nickname">닉네임: </p>
+         <p id="username">아이디: </p>
+      </div>
+      <button class="button" id="changeNickname">닉네임 변경</button>
+      <button class="button" id="changePassword">비밀번호 변경</button>
+      <button class="button" id="accountOut">회원탈퇴</button>
+      <button class="button" id="logout">로그아웃</button>
+   </main>
+</div>
+
+<script>
+
+// 닉네임 출력 함수
+function displayNickname() {
+  var loggedInUserInfo = JSON.parse(localStorage.getItem('loggedInUserInfo'));
+  var nicknameElement = document.getElementById('nickname');
+
+  if (loggedInUserInfo) {
+    nicknameElement.textContent = '닉네임: ' + loggedInUserInfo[0];
+  } else {
+    nicknameElement.textContent = '';
+  }
+}
+// 아이디 출력 함수
+function displayID() {
+  var loggedInUserInfo = JSON.parse(localStorage.getItem('loggedInUserInfo'));
+  var usernameElement = document.getElementById('username');
+
+  if (loggedInUserInfo) {
+    usernameElement.textContent = '아이디: ' + loggedInUserInfo[1];
+  } else {
+    usernameElement.textContent = '';
+  }
+}
+displayNickname();
+displayID();
+
+//탈퇴 함수
+function Out(loggedInUserInfo){
+  var confirmOut = confirm("회원을 탈퇴하시겠습니까?");
+  
+  if (confirmOut) {
+    var loggedInUserInfo = JSON.parse(localStorage.getItem('loggedInUserInfo'));
+    var accountList = JSON.parse(localStorage.getItem('accountList'));
+    var accountDiaryList = JSON.parse(localStorage.getItem('accountDiaryList'));
+
+    // 사용자 정보 제거
+    for (var i = 0; i < accountList.length; i++) {
+      if (accountList[i][1] === loggedInUserInfo[1]) {
+        accountList.splice(i, 1);
+        break;
+      }
+    }
+     // 사용자 다이어리 제거
+     for (var j = 0; j < accountDiaryList.length; j++) {
+      if (accountDiaryList[j][0] === loggedInUserInfo[0]) {
+        accountDiaryList.splice(j, 1);
+        break;
+      }
+    }
+
+    // 로그인 정보 초기화.
+    localStorage.removeItem('loggedInUserInfo');
+    localStorage.setItem('accountList', JSON.stringify(accountList));
+    localStorage.setItem('accountDiaryList', JSON.stringify(accountDiaryList));
+
+    alert("회원 탈퇴가 완료되었습니다.");
+    location.href = './Login.html';
+  }
+}
+
+
+
+
+const backButton=document.getElementById("back");
+backButton.addEventListener("click", function() {
+  location.href = "./calendar.html";
+});
+
+const CNButton=document.getElementById("changeNickname");
+CNButton.addEventListener("click", function() {
+  location.href = "./ChangeNickname.html";
+});
+const CPButton=document.getElementById("changePassword");
+CPButton.addEventListener("click", function() {
+  location.href = "./ChangePassword.html";
+});
+const outButton=document.getElementById("accountOut");
+outButton.addEventListener("click", function() {
+  var loggedInUserInfo = JSON.parse(localStorage.getItem('loggedInUserInfo'));
+  Out(loggedInUserInfo);
+});
+const logoutButton=document.getElementById("logout");
+logoutButton.addEventListener("click", function() {
+  location.href = "./Login.html";
+});
+  </script>
+</body>
+</html>

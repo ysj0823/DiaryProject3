@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감정록, 감정을 기록하다</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .logout {
+            background-color: #f2f2f2;
+            display: flex;
+            border: none;
+            position: relative;
+
+        }
+
+        .logout-button {
+            background-color: #f2f2f2;
+            display: flex;
+            border: none;
+            position: absolute;
+            right: 10px;
+            background-color: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .home-button {
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
+            background-size: contain;
+            border: none;
+            background-color: transparent;
+            background-image: url('./image/home.png');
+        }
+
+        .date {
+            margin: 0 auto;
+        }
+
+        #username {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+
+        .month {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #date {
+            font-family: inherit;
+            display: block;
+            width: 150px;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        /*     */
+        .box {
+            /* width: fit-content; */
+            width: auto;
+            padding: 0px 130px 0 130px;
+            margin: 0 auto;
+        }
+
+
+        .bar-graph {
+            background-color: #FDEEDC;
+            padding: 60px 30px 0px 30px;
+            border-radius: 20px 20px 0px 0px;
+            display: flex;
+            justify-content: space-between;
+            height: 200px;
+        }
+
+        .bar {
+            width: 30px;
+            position: relative;
+        }
+
+
+        .bar-percentage {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            /* border-radius: 50px 50px 0px 0px; */
+            background-color: #F1A661;
+            transition: height 0.5s;
+        }
+
+        .bar-percentage:before {
+            content: attr(data-percentage) '%';
+            position: absolute;
+            left: 33%;
+            top: -20px;
+            font-size: 12px;
+
+        }
+
+        .bar-image {
+            width: auto;
+            padding: 10px 30px 0 30px;
+            display: flex;
+            justify-content: space-between;
+            height: 50px;
+            background-size: contain;
+        }
+
+        .line {
+            height: 1px;
+            background-color: #183A1D;
+        }
+
+        /*      м  */
+        #analysis-section {
+            font-family: inherit;
+            background-color: #f2f2f2;
+            border: 3px solid #333;
+            /* border-radius: 50px; */
+            padding: 30px;
+            margin: 30px;
+            font-size: 1.5rem;
+        }
+
+        .analysis-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+
+        }
+
+        .most-emotion,
+        .least-emotion {
+            display: flex;
+            align-items: stretch;
+            flex-basis: calc(50% - 10px);
+            /* border: 1px solid #ccc; */
+            padding: 30px 20px 10px 40px;
+            font-family: inherit;
+            border-radius: 30px 30px 30px 30px;
+            background-color: #fde8ce;
+
+        }
+
+        .most-emotion h3,
+        .least-emotion h3 {
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .most-emotion div,
+        .least-emotion div {
+            padding: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            font-family: inherit;
+        }
+
+        /*      */
+        #advice-section {
+            font-family: inherit;
+            background-color: #f2f2f2;
+            border: 3px solid #333;
+            /* border-radius: 50px; */
+            padding: 20px;
+            margin: 30px;
+            font-size: 1.5rem;
+
+        }
+
+        .advice-container {
+            padding: 20px;
+            font-family: inherit;
+            font-size: 1.5rem;
+        }
+
+        /*  Ʈ*/
+        @font-face {
+            font-family: 'GangwonEdu_OTFBoldA';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            padding: 15%;
+            font-family: 'GangwonEdu_OTFBoldA';
+            font-size: 2rem;
+        }
+    </style>
+</head>
+
+
+
+<body>
+
+    <!-- 로그아웃 버튼 -->
+    <div class="logout">
+        <button class="logout-button" onclick="logout();">로그아웃</button>
+    </div>
+
+    <!-- 홈 버튼-->
+    <div>
+        <button class="home-button" onclick="home();"></button>
+    </div>
+    <!-- "OOO 님의 월별 감정 통계" -->
+    <div id="username"></div>
+    <div class="line"></div>
+
+
+    <!-- 월별 감정 통계 -->
+    <main class="main">
+
+        <!--날짜 셀렉트 박스-->
+        <div class="month">
+            <input type="month" value="2023-05" id="date" name="date">
+            <!-- <button onclick="selectDate()">click</button> -->
+        </div>
+
+
+        <div class="box">
+            <div class="bar-graph">
+                <div class="bar" id="Very_Happy-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Loudly_Crying-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Sad-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Heart_Eyes-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Fearful-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="smile-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Neutral-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+                <div class="bar" id="Angry-bar">
+                    <div class="bar-percentage"></div>
+                </div>
+            </div>
+            <div class="line"></div>
+
+
+            <div class="bar-image">
+                <img src="./image/Very_Happy.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Loudly_Crying.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Sad.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Heart_Eyes.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Fearful.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/smile.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Neutral.png" width="30px" height="30px" background-size: contain;>
+                <img src="./image/Angry.png" width="30px" height="30px" background-size: contain;>
+            </div>
+        </div>
+
+        <!-- 감정 분석 -->
+        <div id="analysis-section">
+            <!-- OO월 감정 분석-->
+            <h2 id="month_info"> 감정분석</h2>
+
+            <div class="analysis-container">
+                <!-- 가장 많은 감정 -->
+                <div class="most-emotion">
+                    <h3>가장 많은 감정:</h3>
+                    <img id="most-image" />
+                    <div id="most-percentage"></div>
+                </div>
+
+                <!-- 가장 적은 감정 -->
+                <div class="least-emotion">
+                    <h3>가장 적은 감정:</h3>
+                    <img id="least-image">
+                    <div id="least-percentage"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 조언 -->
+        <div id="advice-section">
+            <h2>조언</h2>
+            <div class="advice-container">
+                <div id="advice"></div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <script>
+        // 행복
+        var veryHappyAdviceList = ["Very_Happy",
+            ["작은 일상의 기쁨을 놓치지 마세요. 감사와 인내로 행복을 발견할 수 있습니다.",
+                "행복은 공유되어야만 더욱 커집니다. 다정한 소통과 협력으로 함께 행복을 나누어보세요.",
+                "진정한 행복은 내면의 평온과 만족감으로부터 비롯됩니다. 내 안의 평화를 추구해보세요.",
+                "행복은 더 큰 가능성과 자신감을 안겨줍니다. 노력하며 빛나는 순간들을 즐기세요.",
+                "삶의 작은 순간을 소중히 여기며, 사소한 것에도 감사하는 마음으로 행복을 느껴보세요. 그곳에 힘이 있습니다"
+            ]];
+
+        // 우울
+        var loudlyCryingAdviceList = ["Loudly_Crying",
+            ["규칙적인 수면 패턴을 유지하고 건강한 식단을 유지하며 몸과 마음을 지속적으로 관리해야 합니다.",
+                "독서는 마음을 안정시키고 긍정적인 생각을 유도하는 데 도움이 될 수 있습니다. 또한, 감정을 글로 표현하고 일기를 쓰는 것은 내면의 안정과 자아 인식을 증진시킬 수 있습니다.",
+                "신체 활동은 우울함을 완화하는 데 도움이 됩니다. 정기적인 운동, 산책, 요가 등을 통해 신체적 활동을 증가시키고 엔도르핀 분비를 촉진시킬 수 있습니다.",
+                "우울함은 스스로 견디기보다 도움을 받을 준비가 되어 있다는 상태입니다. 가까운 친구나 가족과 규칙적으로 연락을 주고받고, 사회적 활동에 참여함으로써 사회적 연결성을 유지하세요.",
+                "우울함은 스스로 견디기보다 도움을 받을 준비가 되어 있다는 상태입니다. 심리 상담사나 정신건강 전문가와 상담하거나, 필요한 경우 약물 치료를 검토해 보세요. 전문가의 도움을 받으면 정확한 진단과 개별화된 치료 계획을 받을 수 있습니다."
+            ]];
+
+        // 슬픔
+        var sadAdviceList = ["Sad",
+            ["슬픔은 자연스러운 감정이며 어떤 상황에서도 발생할 수 있습니다. 감정을 거부하지 말고 허락하고 받아들이는 것이 중요합니다. 슬픔을 인정하고 자신의 감정에 대해 이해하려고 노력하세요.",
+                "슬픔은 스트레스와 관련이 있을 수 있습니다. 스트레스를 관리하기 위해 효과적인 방법을 찾아보세요. 명상, 규칙적인 심호흡, 예술적 표현, 걷기 등 스트레스 해소 방법을 실험해 보세요.",
+                "슬픔을 느낄 때에는 자기 돌봄이 더 중요해집니다. 편안한 환경을 조성하고, 자신을 위로하는 활동을 찾아보세요. 예를 들어, 온수 욕조에서 목욕을 즐기거나, 마음에 드는 책을 읽는 등 자신을 위한 시간을 가져보세요.",
+                "슬픔을 혼자 짊어지기보다는 사회적 지원을 찾아보세요. 가족이나 친구와 이야기를 나누고 감정을 공유하는 것은 슬픔을 완화하는 데 도움이 될 수 있습니다. 또한, 심리상담사나 지원 그룹에 참여하여 지속적인 지원을 받을 수도 있습니다.",
+                "슬픔에 빠져들기 쉽지만, 자기 자신과의 긍정적인 대화를 유지해야 합니다. 부정적인 생각에 사로잡히지 않고, 자신을 격려하고 지지해 주는 말을 내뱉어 보세요. 슬픔에 대한 관점을 조정하고, 긍정적인 시각을 유지하는 것이 도움이 됩니다."
+            ]];
+
+        // 설렘
+        var heartEyesAdviceList = ["Heart_Eyes",
+            ["설레는 감정은 다양한 원인을 가질 수 있습니다. 그 감정이 어디서 비롯되는지, 어떤 상황이나 사람과 연관되는지를 파악해보세요. 그것이 당신에게 특정한 의미를 지니는지, 미래에 대한 기대감을 자극하는지 등을 고민해보세요.",
+                "설렘은 종종 미래에 대한 기대와 관련되어 있습니다. 그러나 지금 이 순간을 즐기는 것도 중요합니다. 현재의 경험을 최대한으로 즐겨보세요. 마음을 가라앉히고 주변 환경을 인지하며, 그 순간을 완전히 경험하세요.",
+                "설레는 감정은 새로운 것을 경험하고 탐험하는 욕구와 관련이 있을 수 있습니다. 당신의 흥미를 자극하는 새로운 경험을 찾아보고, 도전해보세요. 새로운 취미를 배우거나, 새로운 장소를 방문하거나, 새로운 사람들과의 대화를 시도해보는 등의 방법으로 설레임을 더욱 풍부하게 만들 수 있습니다.",
+                "자신을 믿으세요. 설레임은 때때로 불안과 함께 올 수 있습니다. 그러나 자신을 믿고 자신의 능력을 믿는 것이 중요합니다. 자신에게 긍정적인 태도를 가지고, 새로운 경험에 도전해보세요.",
+                "설렘은 자신에 대한 자신감과 긍정적인 자아 이미지를 향상시키는데 도움이 됩니다. 설렘을 느끼면 자신을 믿고 자신의 능력을 믿으세요. 자신에게 도전하고 새로운 경험에 열려 있을 때 가장 멋진 순간들을 만날 수 있습니다."
+            ]];
+
+        // 두려움
+        var fearfulAdviceList = ["Fearful",
+            ["두려움의 근본적인 이유는 무엇인지 파악해보세요. 그것이 현실적인 위험이라면 그에 대처할 수 있는 방법을 생각해봅시다.",
+                "불안과 두려움은 호흡을 얕게하고 긴장한 상태에서 비롯될 수 있습니다. 깊이 숨을 들이마시고 천천히 내쉬며 몸과 마음을 집중시키는 명상을 시도해보세요.",
+                "가까운 친구, 가족 또는 신뢰할 수 있는 사람에게 도움을 요청해보세요. 두려움을 혼자 짊어지는 것은 어렵기 때문에 다른 사람과 이야기하고 공유함으로써 안정감과 지지를 받을 수 있습니다.",
+                "작은 목표를 세우세요. 작은 목표를 세우고 성취감을 느끼며 조금씩 나아갈 수 있도록 노력해보세요.",
+                "스트레스와 두려움을 극복하기 위해서는 자신을 돌보는 것이 중요합니다. 충분한 휴식과 수면을 취하면 극복에 도움이 됩니다."
+            ]];
+
+        // 즐거움
+        var smileAdviceList = ["smile",
+            ["즐거움을 기록하고 기억에 남긴다면, 힘들 때 돌아보며 다시 느낄 수 있습니다.",
+                "주위에 긍정적인 영향을 주는 사람들과 함께 시간을 보내면 즐거움이 번져갑니다.",
+                "소소한 즐거움을 찾아서 일상에 살아 숨쉬는 것을 기뻐해보세요.",
+                "감사의 마음을 가지고 주변을 관찰하며 작은 즐거움을 발견해보세요.",
+                "자신과 주변을 받아들이며 즐기는 태도로 모든 순간을 즐거움으로 채워보세요."
+            ]];
+
+        // 그냥저냥
+        var neutralAdviceList = ["Neutral",
+            ["자기 관리에 신경을 쓰세요. 충분한 휴식과 수면, 규칙적인 식사와 운동을 통해 건강을 유지하고 기분을 개선할 수 있습니다.",
+                "긍정적인 생각에 집중하세요. 부정적인 생각에 사로잡히기 쉽지만, 의도적으로 긍정적인 생각을 강조하고 감사와 성취를 인식하는 것이 중요합니다.",
+                "소중한 사람들과 교류하세요. 가까운 친구나 가족과 함께 시간을 보내거나 사회적인 활동에 참여하여 소통과 연결을 유지하세요.",
+                "취미나 관심사에 몰두하세요. 자신을 흥미롭게 하는 활동에 몰두함으로써 즐거움과 만족감을 느낄 수 있습니다.",
+                "스트레스를 해소하는 방법을 찾으세요. 명상, 요가, 음악 감상, 독서 등 스트레스를 해소하는 다양한 방법을 시도해보세요. 자신에게 가장 적합한 방법을 찾아 진행하세요."
+            ]];
+
+        // 분노
+        var angryAdviceList = ["Angry",
+            ["분노는 종종 스트레스의 결과로 나타날 수 있습니다. 스트레스 관리 기술을 익히고 실천하여 분노를 효과적으로 관리하세요. 명상, 근육 이완, 숨쉬기 연습, 스트레칭 등 스트레스를 완화시키는 기술을 시도해보세요. 이를 통해 내적 평화와 안정을 유지할 수 있습니다.",
+                "분노가 가라앉을 때까지 급하게 대응하지 않고, 시간을 내어 진정될 때까지 기다려보세요. 급하게 행동하면 후회할 수 있는 결정을 내릴 수 있습니다. 조급함을 느낄 때는 일시적으로 멈추고, 조용한 장소로 가서 몇 분 동안 고요하게 있는 것이 좋습니다.",
+                "분노가 통제할 수 없을 때, 생각을 정리하는 것이 도움이 됩니다. 이를 위해 일기를 쓰거나, 머릿속으로 생각을 정리하는 시간을 가져보세요. 이렇게 하면 감정적인 평형을 되찾을 수 있고, 분노에 대한 근본적인 이유를 파악할 수 있습니다.",
+                "분노를 내면서 타인에게 폭력적인 행동을 하거나 악화시키지 않도록 주의하세요. 대신, 상황을 적절히 표현하고 감정을 이해해줄 수 있는 사람과 대화해보세요. 이를 통해 분노를 공유하고 해소할 수 있으며, 문제를 해결하는 데 도움이 될 수 있습니다.",
+                "일상에서 벗어나고 스트레스를 해소할 수 있는 취미나 관심사를 가지세요. 음악, 미술, 책 읽기, 정원 가꾸기, 요리, 등산 등 다양한 활동을 통해 자신을 충전할 수 있습니다. 취미를 통해 즐거움과 성취감을 느끼면서 마음을 안정시킬 수 있고, 분노가 쌓이는 것을 방지할 수 있습니다."
+            ]];
+
+        // 조언 리스트
+        var adviceList = [veryHappyAdviceList, loudlyCryingAdviceList,
+            sadAdviceList, heartEyesAdviceList, fearfulAdviceList,
+            smileAdviceList, neutralAdviceList, angryAdviceList];
+
+        // 로컬 스토리지 - 조언 데이터 저장
+        localStorage.setItem("adviceList", adviceList);
+
+        // 사용자 정보 [nickname, id, password, diary변수] 
+        var loggedInUserInfo = JSON.parse(localStorage.getItem("loggedInUserInfo"));
+
+        // 일기 리스트
+        const userDiaryList = JSON.parse(localStorage.getItem('accountDiaryList'));
+
+
+        // 한 달 치(=month_info) 일기 리스트 변수 선언
+        var diaryMonthInfoData = [];
+
+
+
+        // 감정 데이터 - 임시 더미 데이터
+        var emotion = {
+            Very_Happy: 0,
+            Loudly_Crying: 0,
+            Sad: 0,
+            Heart_Eyes: 0,
+            Fearful: 0,
+            smile: 0,
+            Neutral: 0,
+            Angry: 0
+        };
+
+        // 감정에 맞는 조언 리스트 변수 선언
+        var adviceData = [, , , ,];
+
+
+
+
+
+        // 로그아웃 로직
+        function logout() {
+            location.href = './Login.html';
+        }
+
+        // 홈 이동
+        function home() {
+            var destination = "./Calendar.html";
+            window.location.href = destination;
+        }
+
+
+        // 사용자 이름 받아오기
+        function getUserName() {
+            var name = loggedInUserInfo[0];
+            return name;
+            //return "홍길동";
+        }
+
+        // OOO님의 월별 감정 통계
+        window.onload = function () {
+
+            sendStatisticsRequest();
+
+            var nameId = document.getElementById("username");
+            var username = getUserName();
+            nameId.innerHTML = username + "님의 월별 감정 통계";
+        };
+
+        //////////////////////////////////////////////////////
+
+
+        function handlerDateClick(event) {
+            var presentDate = document.getElementById("date").value;
+            console.log(presentDate);
+
+
+            const month_info = document.getElementById("month_info");
+            month_info.innerHTML = presentDate + " 감정분석";
+
+
+            // 날짜에 맞는 데이터 세팅
+            setEmotionValue(presentDate);
+
+            // 전체 감정 개수
+            const totalEmotions = Object.values(emotion).reduce((acc, val) => acc + val, 0);
+
+            // 8가지 감정 데이터에서 개수를 가져와 백분율로 바꿔서
+            for (const e in emotion) {
+                const count = emotion[e];
+                const percentage = (count / totalEmotions) * 100;
+                emotion[e] = Math.floor(percentage); // 소수점 버리기
+            }
+
+            EmotionGraph(emotion);
+            MostAndLeastEmotions(emotion);
+            Advice(adviceData);
+        }
+
+
+        // 날짜를 기준으로 감정 데이터(=emotion) count
+        function setEmotionValue(month_info) {
+
+            // 배열 초기화
+            emotion.Angry = 0;
+            emotion.Fearful = 0;
+            emotion.Heart_Eyes = 0;
+            emotion.Loudly_Crying = 0;
+            emotion.Neutral = 0;
+            emotion.Sad = 0;
+            emotion.Very_Happy = 0;
+            emotion.smile = 0;
+
+            // 한 달 치 일기 리스트 세팅
+            setDiaryMonthInfoData(month_info);
+            
+            for (var i = 0; i < diaryMonthInfoData.length; i++) {
+
+                var diary = diaryMonthInfoData[i];
+
+                if (diary[5] == "Very_Happy") {
+                    emotion.Very_Happy += 1;
+                }
+                else if (diary[5] == "Loudly_Crying") {
+                    emotion.Loudly_Crying += 1;
+                }
+                else if (diary[5] == "Sad") {
+                    emotion.Sad += 1;
+                }
+                else if (diary[5] == "Heart_Eyes") {
+                    emotion.Heart_Eyes += 1;
+                }
+                else if (diary[5] == "Fearful") {
+                    emotion.Fearful += 1;
+                }
+                else if (diary[5] == "smile") {
+                    emotion.smile += 1;
+                }
+                else if (diary[5] == "Neutral") {
+                    emotion.Neutral += 1;
+                }
+                else if (diary[5] == "Angry") {
+                    emotion.Angry += 1;
+                }
+            }
+        }
+
+        // month_info에 해당하는 한 달 치 일기 리스트 세팅
+        function setDiaryMonthInfoData(month_info) {
+
+            diaryMonthInfoData.length = 0;
+            
+            // ex) month_info -> 2023-04
+            for (var i = 0; i < userDiaryList.length; i++) {
+                var diary = userDiaryList[i];
+                diary_date = diary[1] + "-" + diary[2];
+
+                if (diary_date == month_info) {
+                    diaryMonthInfoData.push(diary);
+                    
+                }
+            }
+        }
+
+
+        // 통계 그래프 
+        function EmotionGraph(emotion) {
+
+            // 각 감정들의 퍼센트 수치 출력
+            const bars = document.querySelectorAll(".bar");
+
+            bars.forEach((bar) => {
+                const id = bar.id.replace("-bar", "");
+                const percentage = emotion[id];
+                const barPercentage = bar.querySelector(".bar-percentage");
+                barPercentage.style.height = percentage + "%";
+                barPercentage.setAttribute("data-percentage", percentage);
+            });
+        }
+
+        // 가장 많은/적은 감정
+        function MostAndLeastEmotions(emotion) {
+            // 값 가져와서
+            const mostEmotion = document.getElementById("most-percentage");
+            const leastEmotion = document.getElementById("least-percentage");
+
+            const mostImage = document.getElementById("most-image");
+            const leastImage = document.getElementById("least-image");
+
+            // 데이터 오름차순 정렬
+            const sortedEmotions = Object.keys(emotion).sort(
+                (a, b) => emotion[b] - emotion[a]
+            );
+
+            // 정렬된 배열의 가장 첫 번째 값으로 적용
+            mostEmotion.innerHTML = emotion[sortedEmotions[0]] + "%";
+            mostImage.setAttribute("src", "./image/" + sortedEmotions[0] + ".png");
+            mostImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
+            mostImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+
+            // 정렬된 배열의 가장 마지막 값으로 적용
+            leastEmotion.innerHTML =
+                emotion[sortedEmotions[sortedEmotions.length - 1]] + "%";
+            leastImage.setAttribute(
+                "src",
+                "./image/" + sortedEmotions[sortedEmotions.length - 1] + ".png"
+            );
+            leastImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
+            leastImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+
+
+            // 가장 많은 감정 기준으로 조언 데이터 세팅
+            setAdvice(sortedEmotions[0]);
+
+        }
+
+        // 감정에 맞는 조언 리스트
+        function setAdvice(mostEmotion) {
+            for (var i = 0; i < 8; i++) {
+                var advice = adviceList[i];
+                if (advice[0] == mostEmotion) {
+                    for (var j = 0; j < 5; j++) {
+                        adviceData[j] = advice[1][j];
+                    }
+                }
+            }
+        }
+
+        // 조언
+        function Advice(adviceData) {
+            const adviceElement = document.getElementById("advice");
+
+            // 리스트에서 랜덤하게 뽑아내기
+            const randomIndex = Math.floor(Math.random() * adviceData.length);
+
+            // 랜덤하게 선택된 조언
+            const selectedAdvice = adviceData[randomIndex];
+
+            // html에 적용
+            adviceElement.textContent = selectedAdvice;
+        }
+
+
+        //
+        function sendStatisticsRequest() {
+
+            var presentDate = "2023-05";
+            const month_info = document.getElementById("month_info");
+            month_info.innerHTML = presentDate + " 감정분석";
+
+
+            // 날짜에 맞는 데이터 세팅
+            setEmotionValue(presentDate);
+
+
+            // 전체 감정 개수
+            const totalEmotions = Object.values(emotion).reduce((acc, val) => acc + val, 0);
+
+            // 8가지 감정 데이터에서 개수를 가져와 백분율로 바꿔서
+            for (const e in emotion) {
+                const count = emotion[e];
+                const percentage = (count / totalEmotions) * 100;
+                emotion[e] = Math.floor(percentage); // 소수점 버리기
+            }
+
+            EmotionGraph(emotion);
+            MostAndLeastEmotions(emotion);
+            Advice(adviceData);
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            date.addEventListener("change", handlerDateClick);
+        });
+
+        
+    </script>
+</body>
+
+</html>
