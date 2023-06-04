@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나의 감정 월간통계</title>
+    <title>감정록, 감정을 기록하다</title>
     <style>
         * {
             box-sizing: border-box;
@@ -430,7 +430,7 @@
 
         // 로그아웃 로직
         function logout() {
-            location.href = './index.html';
+            location.href = './Signin.html';
         }
 
         // 홈 이동
@@ -444,7 +444,6 @@
         function getUserName() {
             var name = loggedInUserInfo[0];
             return name;
-            //return "홍길동";
         }
 
         // OOO님의 월별 감정 통계
@@ -458,7 +457,6 @@
         };
 
         //////////////////////////////////////////////////////
-
 
         function handlerDateClick(event) {
             var presentDate = document.getElementById("date").value;
@@ -503,7 +501,7 @@
 
             // 한 달 치 일기 리스트 세팅
             setDiaryMonthInfoData(month_info);
-            
+
             for (var i = 0; i < diaryMonthInfoData.length; i++) {
 
                 var diary = diaryMonthInfoData[i];
@@ -539,7 +537,7 @@
         function setDiaryMonthInfoData(month_info) {
 
             diaryMonthInfoData.length = 0;
-            
+
             // ex) month_info -> 2023-04
             for (var i = 0; i < userDiaryList.length; i++) {
                 var diary = userDiaryList[i];
@@ -547,25 +545,41 @@
 
                 if (diary_date == month_info) {
                     diaryMonthInfoData.push(diary);
-                    
+
                 }
             }
+
         }
 
 
         // 통계 그래프 
+        // 각 감정들의 퍼센트 수치 출력
         function EmotionGraph(emotion) {
 
-            // 각 감정들의 퍼센트 수치 출력
             const bars = document.querySelectorAll(".bar");
 
-            bars.forEach((bar) => {
-                const id = bar.id.replace("-bar", "");
-                const percentage = emotion[id];
-                const barPercentage = bar.querySelector(".bar-percentage");
-                barPercentage.style.height = percentage + "%";
-                barPercentage.setAttribute("data-percentage", percentage);
-            });
+
+            // 해당 월에 작성한 일기가 없을 경우
+            if (diaryMonthInfoData.length === 0) {
+                bars.forEach((bar) => {
+                    const id = bar.id.replace("-bar", "");
+                    const percentage = 0;
+                    const barPercentage = bar.querySelector(".bar-percentage");
+                    barPercentage.style.height = percentage + "%";
+                    barPercentage.setAttribute("data-percentage", percentage);
+                });
+
+            }
+
+            else {
+                bars.forEach((bar) => {
+                    const id = bar.id.replace("-bar", "");
+                    const percentage = emotion[id];
+                    const barPercentage = bar.querySelector(".bar-percentage");
+                    barPercentage.style.height = percentage + "%";
+                    barPercentage.setAttribute("data-percentage", percentage);
+                });
+            }
         }
 
         // 가장 많은/적은 감정
@@ -577,30 +591,44 @@
             const mostImage = document.getElementById("most-image");
             const leastImage = document.getElementById("least-image");
 
-            // 데이터 오름차순 정렬
-            const sortedEmotions = Object.keys(emotion).sort(
-                (a, b) => emotion[b] - emotion[a]
-            );
+            // 해당 월에 작성한 일기가 없을 경우
+            if (diaryMonthInfoData.length === 0) {
+                mostEmotion.innerHTML = "";
+                mostImage.style.display = "none";
 
-            // 정렬된 배열의 가장 첫 번째 값으로 적용
-            mostEmotion.innerHTML = emotion[sortedEmotions[0]] + "%";
-            mostImage.setAttribute("src", "./image/" + sortedEmotions[0] + ".png");
-            mostImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
-            mostImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+                leastEmotion.innerHTML = "";
+                leastImage.style.display = "none";
+            }
 
-            // 정렬된 배열의 가장 마지막 값으로 적용
-            leastEmotion.innerHTML =
-                emotion[sortedEmotions[sortedEmotions.length - 1]] + "%";
-            leastImage.setAttribute(
-                "src",
-                "./image/" + sortedEmotions[sortedEmotions.length - 1] + ".png"
-            );
-            leastImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
-            leastImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+            else {
+                mostImage.style.display = "block";
+                leastImage.style.display = "block";
 
+                // 데이터 오름차순 정렬
+                const sortedEmotions = Object.keys(emotion).sort(
+                    (a, b) => emotion[b] - emotion[a]
+                );
 
-            // 가장 많은 감정 기준으로 조언 데이터 세팅
-            setAdvice(sortedEmotions[0]);
+                // 정렬된 배열의 가장 첫 번째 값으로 적용
+                mostEmotion.innerHTML = emotion[sortedEmotions[0]] + "%";
+                mostImage.setAttribute("src", "./image/" + sortedEmotions[0] + ".png");
+                mostImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
+                mostImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+
+                // 정렬된 배열의 가장 마지막 값으로 적용
+                leastEmotion.innerHTML =
+                    emotion[sortedEmotions[sortedEmotions.length - 1]] + "%";
+                leastImage.setAttribute(
+                    "src",
+                    "./image/" + sortedEmotions[sortedEmotions.length - 1] + ".png"
+                );
+                leastImage.style.width = "30px"; // 이미지의 너비를 100px로 설정
+                leastImage.style.height = "30px"; // 이미지의 높이를 100px로 설정
+
+                // 가장 많은 감정 기준으로 조언 데이터 세팅
+                setAdvice(sortedEmotions[0]);
+            }
+
 
         }
 
@@ -620,28 +648,37 @@
         function Advice(adviceData) {
             const adviceElement = document.getElementById("advice");
 
-            // 리스트에서 랜덤하게 뽑아내기
-            const randomIndex = Math.floor(Math.random() * adviceData.length);
-
-            // 랜덤하게 선택된 조언
-            const selectedAdvice = adviceData[randomIndex];
-
-            // html에 적용
-            adviceElement.textContent = selectedAdvice;
+            // 해당 월에 작성한 일기가 없을 경우
+            if (diaryMonthInfoData.length === 0) {
+                adviceElement.textContent = "";
+            }
+            else {
+                // 리스트에서 랜덤하게 뽑아내기
+                const randomIndex = Math.floor(Math.random() * adviceData.length);
+                // 랜덤하게 선택된 조언
+                const selectedAdvice = adviceData[randomIndex];
+                // html에 적용
+                adviceElement.textContent = selectedAdvice;
+            }
         }
 
 
         //
         function sendStatisticsRequest() {
 
-            var presentDate = "2023-05";
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1;
+            var presentDate = year + "-0" + month;
+
+            document.getElementById("date").value = presentDate;
+
             const month_info = document.getElementById("month_info");
             month_info.innerHTML = presentDate + " 감정분석";
 
 
             // 날짜에 맞는 데이터 세팅
             setEmotionValue(presentDate);
-
 
             // 전체 감정 개수
             const totalEmotions = Object.values(emotion).reduce((acc, val) => acc + val, 0);
@@ -663,7 +700,7 @@
             date.addEventListener("change", handlerDateClick);
         });
 
-        
+
     </script>
 </body>
 
