@@ -10,7 +10,7 @@
 
 [[redirects]]
   from = "/Login"
-  to = "/Login.html"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
