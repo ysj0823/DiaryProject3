@@ -28,7 +28,7 @@ document.getElementById("statistic").addEventListener("click", function () {
 
 //로그아웃 버튼
 document.getElementById("logout").addEventListener("click", function () {
-  location.href = "./Login.html";
+  location.href = "./index.html";
 });
 
 //마이페이지 버튼
