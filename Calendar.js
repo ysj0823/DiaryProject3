@@ -16,6 +16,7 @@ function displayNickname() {
     Nick.textContent = loggedInUserInfo[0] + "님의 감정록";
   } else {
     alert("로그인을 다시 해주세요.");
+    location.href="./index.html";
   }
 }
 displayNickname();
@@ -28,6 +29,8 @@ document.getElementById("statistic").addEventListener("click", function () {
 
 //로그아웃 버튼
 document.getElementById("logout").addEventListener("click", function () {
+  localStorage.removeItem("loggedInUserInfo");
+
   location.href = "./index.html";
 });
 

@@ -430,7 +430,8 @@
 
         // 로그아웃 로직
         function logout() {
-            location.href = './index.html';
+            localStorage.removeItem("loggedInUserInfo");
+            location.href = "./index.html";
         }
 
         // 홈 이동

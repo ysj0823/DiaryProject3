@@ -112,9 +112,11 @@ outButton.addEventListener("click", function() {
   Out(loggedInUserInfo);
 });
 const logoutButton=document.getElementById("logout");
-logoutButton.addEventListener("click", function() {
+logoutButton.addEventListener("click", function () {
+  localStorage.removeItem("loggedInUserInfo");
   location.href = "./index.html";
 });
+
   </script>
 </body>
 </html>
