@@ -19,6 +19,7 @@ function displayNickname() {
     location.href="./index.html";
   }
 }
+
 displayNickname();
 
 // ===========메뉴버튼============
@@ -43,6 +44,26 @@ document.getElementById("mypage").addEventListener("click", function () {
 editButton.addEventListener("click", function () {
   location.href = "./Diary.html";
 });
+
+
+
+function getDiaryStyle(year, month, day) {
+  if (loggedInUserDiary && Array.isArray(loggedInUserDiary)) {
+    var diary = loggedInUserDiary.find(function (diary) {
+      return (
+        diary[0] === loggedInUserInfo[1] &&
+        diary[1] == year &&
+        diary[2] == month &&
+        diary[3] == day
+      );
+    });
+    if (diary) {
+      // 일기가 있는 경우에 대한 스타일을 반환
+      return "background-color: rgb(255, 230, 200); color: white; border-radius: 10px";
+    }
+  }
+  return ""; // 일기가 없는 경우 빈 스타일 반환
+}
 
 
 
@@ -77,18 +98,26 @@ function calendarMaker(target, date) {
     cnt++;
   }
 
-  //날짜 채우기
-  for (i = 1; i <= thisLastDay.getDate(); i++) {
-    if (cnt % 7 == 0) {
-      tag += "<tr>";
-    }
-
-    tag += "<td>" + i + "</td>";
-    cnt++;
-    if (cnt % 7 == 0) {
-      tag += "</tr>";
-    }
+ 
+  
+  
+// 날짜 채우기
+for (i = 1; i <= thisLastDay.getDate(); i++) {
+  if (cnt % 7 == 0) {
+    tag += "<tr>";
   }
+
+  // 날짜에 해당하는 스타일 추가
+  var diaryStyle = getDiaryStyle(year, month, i);
+  var styleString = diaryStyle ? "style='" + diaryStyle + "'" : "";
+
+  tag += "<td " + styleString + ">" + i + "</td>";
+  cnt++;
+  if (cnt % 7 == 0) {
+    tag += "</tr>";
+  }
+}
+
   $(target).find("#custom_set_date").append(tag);
   calMoveEvtFn();
 

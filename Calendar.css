@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0
 }
-
+  
 .custom_calendar_table {
     margin: 0 auto;
     width: 100%;
@@ -148,7 +148,7 @@
     padding: 15%;
     font-family: 'GangwonEdu_OTFBoldA';
     font-size: 2rem;
-    background-color: #f2f2f2;
+    background-color: #ffffff;
 }
 
 .today-box a {margin: 0 3px;}

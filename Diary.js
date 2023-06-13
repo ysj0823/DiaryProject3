@@ -52,6 +52,12 @@ if (existingDiary) {
   diaryContent.value = existingDiary[6];
 }
 
+// 선택한 이모티콘에 검정 테두리 표시
+const selectedEmotionImg = document.querySelector(`img[alt="${diaryEmotion.value}"]`);
+if (selectedEmotionImg) {
+  selectedEmotionImg.parentElement.classList.add('selected');
+}
+
 // =========일기 저장 버튼==========
 saveButton.addEventListener("click", function() {
   var diaryDate = document.getElementById("date").value;
